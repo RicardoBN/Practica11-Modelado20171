@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>661</width>
+    <height>583</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>cliente</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>c4396505db29c0744b9fef79f8ca4f25.jpg</normaloff>c4396505db29c0744b9fef79f8ca4f25.jpg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -19,8 +23,8 @@
      <widget class="QGroupBox" name="groupBox">
       <property name="minimumSize">
        <size>
-        <width>531</width>
-        <height>111</height>
+        <width>391</width>
+        <height>91</height>
        </size>
       </property>
       <property name="title">
@@ -31,8 +35,8 @@
         <rect>
          <x>20</x>
          <y>30</y>
-         <width>46</width>
-         <height>13</height>
+         <width>31</width>
+         <height>16</height>
         </rect>
        </property>
        <property name="text">
@@ -44,8 +48,8 @@
         <rect>
          <x>20</x>
          <y>60</y>
-         <width>46</width>
-         <height>13</height>
+         <width>31</width>
+         <height>16</height>
         </rect>
        </property>
        <property name="text">
@@ -55,9 +59,9 @@
       <widget class="QLineEdit" name="lineEdit_2">
        <property name="geometry">
         <rect>
-         <x>80</x>
+         <x>60</x>
          <y>30</y>
-         <width>441</width>
+         <width>321</width>
          <height>16</height>
         </rect>
        </property>
@@ -65,9 +69,9 @@
       <widget class="QLineEdit" name="lineEdit_3">
        <property name="geometry">
         <rect>
-         <x>80</x>
+         <x>60</x>
          <y>60</y>
-         <width>441</width>
+         <width>321</width>
          <height>16</height>
         </rect>
        </property>
@@ -78,8 +82,8 @@
      <widget class="QGroupBox" name="groupBox_2">
       <property name="minimumSize">
        <size>
-        <width>191</width>
-        <height>111</height>
+        <width>241</width>
+        <height>91</height>
        </size>
       </property>
       <property name="title">
@@ -137,14 +141,14 @@
         <number>100000</number>
        </property>
        <property name="value">
-        <number>800</number>
+        <number>1</number>
        </property>
       </widget>
       <widget class="QPushButton" name="pushButton">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>80</y>
+         <y>60</y>
          <width>101</width>
          <height>21</height>
         </rect>
@@ -157,7 +161,7 @@
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>80</y>
+         <y>60</y>
          <width>111</width>
          <height>21</height>
         </rect>
@@ -170,6 +174,12 @@
     </item>
     <item row="1" column="0" colspan="2">
      <widget class="QTableWidget" name="tableWidget">
+      <property name="minimumSize">
+       <size>
+        <width>600</width>
+        <height>420</height>
+       </size>
+      </property>
       <property name="showGrid">
        <bool>true</bool>
       </property>
@@ -269,7 +279,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>661</width>
      <height>21</height>
     </rect>
    </property>

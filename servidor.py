@@ -3,7 +3,7 @@ from xmlrpc.server import SimpleXMLRPCRequestHandler
 import sys, time
 from PyQt4 import QtCore, QtGui, uic
 from random import randint
-
+terminado = False
 estado = 0
 estado_ter = 0
 serpientes = dict()
@@ -69,27 +69,14 @@ class Servidor(QtGui.QMainWindow):
         self.setFocus()
         self.show()    
           
-    # Cambio de Movimiento    
-    def keyPressEvent(self, event):
-      global dir
-      key = event.key()      
-      if key == QtCore.Qt.Key_Left and dir != 4:
-        dir = 2              
-      if key == QtCore.Qt.Key_Right and dir != 2:
-        dir = 4                
-      if key == QtCore.Qt.Key_Up and dir != 3:
-        dir = 1                
-      if key == QtCore.Qt.Key_Down and dir != 1:
-        dir = 3         
+        
     # Inicio del juego     
     def inicia(self):
-      global estado      
-      print(estado)          
+      global estado    
       self.pushButton_3.setText("Terminar")
       self.setFocus()      
       if estado == 0:
-        estado = 1        
-        self.yo_juego()        
+        estado = 1      
         self.colorea_serpientes()
         self.pushButton_2.setText("Pausar")
         self.corre_juego()
@@ -116,17 +103,18 @@ class Servidor(QtGui.QMainWindow):
          
     def termina(self):
       global estado
-      global dir             
+      global dir
+      global terminado
+      terminado = True            
       estado = 3
       dir = 3
       print("El juego ha terminado")
       self.timer.stop()
+      self.timerServer.stop()
       self.pushButton_2.setText("Reiniciar")
       self.tableWidget.setColumnCount(0)
-      self.tableWidget.setRowCount(0)
-      self.tableWidget.setColumnCount(0)
+      self.tableWidget.setRowCount(0)    
       self.spinBox_2.setProperty("value", 20)
-      self.spinBox.setProperty("value", 20)
       self.doubleSpinBox.setProperty("value", 30.00)
       self.tableWidget.setColumnCount(self.spinBox.value())
       self.tableWidget.setRowCount(self.spinBox_2.value())
@@ -167,11 +155,17 @@ class Servidor(QtGui.QMainWindow):
           serp.cuerpo.append([0,serp.cuerpo[-1][1]])
       if direc == 4: 
         if cabeza != [serp.cuerpo[-1][0],limit_col]:
-         serp.cuerpo.append([serp.cuerpo[-1][0], serp.cuerpo[-1][1]+1]) #Movimiento havia la derecha
+         serp.cuerpo.append([serp.cuerpo[-1][0], serp.cuerpo[-1][1]+1]) #Movimiento hacia la derecha
         else:    
           serp.cuerpo.append([serp.cuerpo[-1][0], 0])
       for x in range(0,len(serp.cuerpo)-1):        
         self.colorea_serpientes()
+      colisiones = 0  
+      for serpiente in serpientes.values():      		
+      		if cabeza in serpiente.cuerpo:
+      			colisiones+=1
+      if colisiones > 1:
+     		self.termina() 				
       for cuerpo in serp.cuerpo:
         if serp.cuerpo.count(cuerpo)>1:
           self.termina()
@@ -199,7 +193,8 @@ class Servidor(QtGui.QMainWindow):
         while filas < total:
           self.tableWidget.insertRow(filas)
           filas += 1      
-               
+    def juego_terminado(self):
+    	return terminado           
     def colorea_serpientes(self):
       for x in serpientes.values():
         for cuerpo in x.cuerpo:
@@ -219,33 +214,32 @@ class Servidor(QtGui.QMainWindow):
       return datos
         
     def cambia_direccion(self,id,dir):
-       
        serpientes[id].cambia_dir(dir)
        return (str(serpientes[id])+"ha cambiado de direccion a"+str(dir))
-    def estado_del_juego(self):
-    	print("hola")
-    	serpientx = [serpiente.datos() for serpiente in serpientes.values()]
-    	print(serpientx)
-    	print("hola")
-    	datos = {
-    		"espera":str(self.doubleSpinBox.value()),
-    		"tamaño X":str(self.spinBox_2.value()),
-    		"tamaño Y":str(self.spinBox.value())   		
-    	}
 
+    def estado_del_juego(self):
+    	serpientx = [serpiente.datos() for serpiente in serpientes.values()]
+    	datos = {
+    		"espera":str(self.spinBox_5.value()),
+    		"tamaño X":str(self.spinBox_2.value()),
+    		"tamaño Y":str(self.spinBox.value()),
+    		"serpientes":serpientx   		
+    	}
     	return datos
+
     def inicia_servidor(self):      
       servidor = self.lineEdit.text()
       puerto = self.spinBox_4.value()
       timeou = self.spinBox_5.value()     
 
-    # Create server
-      server = SimpleXMLRPCServer(("localhost",1))
+    # Crea el servidor para alojar a más serpientes
+      server = SimpleXMLRPCServer((servidor,puerto))
       server.register_multicall_functions()      
       server.register_function(self.ping,'ping')
       server.register_function(self.yo_juego,'yo_juego')
       server.register_function(self.cambia_direccion,'cambia_direccion')
       server.register_function(self.estado_del_juego,'estado_del_juego')
+      server.register_function(self.juego_terminado,'juego_terminado')
       server.register_introspection_functions()
       server.timeout = timeou
       print(server.server_address[0])
